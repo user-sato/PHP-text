@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../javascript/_common/scripts/jquery-3.4.1.min.js"></script>
+        <title>ろくまる農園</title>
+    </head>
+    <body>
+        <!-- <form method="post" action="./staff_login_check.php">
+            <p>スタッフログイン</p>
+            <p>スタッフコード：<input type="text" name="code"></p>
+            <p>パスワード：<input type="password" name="pass"></p>
+            <input type="submit" value="ログイン">
+        </form> -->
+
+        <p>スタッフログイン</p>
+        <p>スタッフコード：<input type="text" name="code" id="code"></p>
+        <p>パスワード：<input type="password" name="pass" id="pass"></p>
+        <input type="button" value="ログイン" id="login">
+        <div id="errMes"></div>
+
+        <script>
+            $(document).ready(function(){
+                $('#login').on('click',function(){
+                    let hostUrl = './staff_login_check.php';
+                    // document.write(`<br>${document.getElementsByName('code')[0].value}`); // コレクション型
+                    // document.write(`<br>${document.getElementsByName('pass')[0].value}`); // コレクション型
+
+                    let staffCode = $('#code').val();                            // id取得なので、#つけないとvalueが取得できない。
+                    let staffPass = $('#pass').val();                            // id取得なので、#つけないとvalueが取得できない。
+
+                    $.ajax({
+                        type:'POST',
+                        url:hostUrl,
+                        data:{code:staffCode,                                    // $_POSTで受け取れる
+                              pass:staffPass}                                    // $_POSTで受け取れる
+                    }).done(function(data){
+                        if(data == 'false'){                                     // 入力チェックではじかれたら
+                            document.getElementById('errMes').innerHTML = 'IDかパスワードが間違っています。';
+                            setTimeout(() => {                                   // 5秒表示したら、クリアする
+                               document.getElementById('errMes').innerHTML = '';
+                            }, 5000);
+                        }else if(data == 'true'){                                // 入力チェックにてOKだったら
+                            window.location.href = "./staff_top.php";            // ページ遷移する。「window.」は省略してもいいっぽい。
+                        }else{
+                            document.getElementById('errMes').innerHTML = 'DBエラー：' + data;
+                        }
+
+                    }).fail(function(){
+
+                    });
+                    
+                });
+            });
+        </script>
+    </body>
+</html>
